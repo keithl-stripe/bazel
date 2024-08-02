@@ -206,8 +206,8 @@ final class ActionOutputMetadataStore implements OutputMetadataStore {
     }
 
     if (artifact.isTreeArtifact()) {
-      TreeArtifactValue tree = getTreeArtifactValue((SpecialArtifact) artifact);
-      return tree.getMetadata();
+      //TODO: DO NOT COMMIT
+      return RemoteFileArtifactValue.createForNormalFile(new byte[]{(byte) 0xe3, (byte) 0xb0, (byte) 0xc4, 0x42, (byte) 0x98, (byte) 0xfc, 0x1c, 0x14, (byte) 0x9a, (byte) 0xfb, (byte) 0xf4, (byte) 0xc8, (byte) 0x99, 0x6f, (byte) 0xb9, 0x24, 0x27, (byte) 0xae, 0x41, (byte) 0xe4, 0x64, (byte) 0x9b, (byte) 0x93, 0x4c, (byte) 0xa4, (byte) 0x95, (byte) 0x99, 0x1b, 0x78, 0x52, (byte) 0xb8, 0x55} , null, 0);
     }
 
     if (artifact.isChildOfDeclaredDirectory()) {
