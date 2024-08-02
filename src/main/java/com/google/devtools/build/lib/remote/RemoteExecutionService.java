@@ -1219,13 +1219,8 @@ public class RemoteExecutionService {
 
     FileOutErr outErr = action.getSpawnExecutionContext().getFileOutErr();
 
-    // Always download the action stdout/stderr.
-    FileOutErr tmpOutErr = outErr.childOutErr();
-    List<ListenableFuture<Void>> outErrDownloads =
-        remoteCache.downloadOutErr(context, result.actionResult, tmpOutErr);
-    for (ListenableFuture<Void> future : outErrDownloads) {
-      downloadsBuilder.add(transform(future, (v) -> null, directExecutor()));
-    }
+    //TODO: DO NOT COMMIT
+    FileOutErr tmpOutErr = new FileOutErr();
 
     ImmutableList<ListenableFuture<FileMetadata>> downloads = downloadsBuilder.build();
     try (SilentCloseable c = Profiler.instance().profile("Remote.download")) {
@@ -1237,17 +1232,6 @@ public class RemoteExecutionService {
       deletePartialDownloadedOutputs(realToTmpPath, tmpOutErr, e);
       throw e;
     }
-
-    FileOutErr.dump(tmpOutErr, outErr);
-
-    // Ensure that we are the only ones writing to the output files when using the dynamic spawn
-    // strategy.
-    action
-        .getSpawnExecutionContext()
-        .lockOutputFiles(result.getExitCode(), result.getMessage(), tmpOutErr);
-    // Will these be properly garbage-collected if the above throws an exception?
-    tmpOutErr.clearOut();
-    tmpOutErr.clearErr();
 
     moveOutputsToFinalLocation(downloads, realToTmpPath);
 
